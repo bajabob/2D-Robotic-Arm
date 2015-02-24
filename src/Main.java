@@ -19,7 +19,8 @@ public class Main
 	/**
 	 * All the buttons to interact with the robotic arm
 	 */
-	private static JButton incAx1, decAx1, incAx2, decAx2, incAx3, decAx3;
+	private static JButton incAx1, decAx1, incAx2, decAx2, incAx3, decAx3,
+			paintCircle;
 
 	/**
 	 * Displays the current angles of the robotic arm
@@ -85,6 +86,10 @@ public class Main
 				roboticArm.decrementLink3();
 				degAx3.setText( "" + roboticArm.getLink3Angle() );
 			}
+			if ( button.equals( paintCircle ) )
+			{
+				roboticArm.paintCircle();
+			}
 			roboticArm.onTranslate();
 			displayPanel.repaint();
 		}
@@ -117,6 +122,9 @@ public class Main
 		incAx3.addActionListener( onAxisButtonPress );
 		decAx3 = new JButton( "-" );
 		decAx3.addActionListener( onAxisButtonPress );
+
+		paintCircle = new JButton( "Paint Circle" );
+		paintCircle.addActionListener( onAxisButtonPress );
 
 		/**
 		 * Create axis degree labels
@@ -178,6 +186,8 @@ public class Main
 		c.gridy = 0;
 		controlPanel.add( new JLabel( "Control Panel", SwingConstants.CENTER ),
 				c );
+		c.gridy = 4;
+		controlPanel.add( paintCircle, c );
 
 		/**
 		 * Create the overall panel, and incorporate

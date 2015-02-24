@@ -44,6 +44,11 @@ public class RoboticArm
 		link3.decrementAngle();
 	}
 
+	public void paintCircle()
+	{
+		System.out.println( "Painting circle..." );
+	}
+
 	public int getLink1Angle()
 	{
 		return link1.getAngle();
