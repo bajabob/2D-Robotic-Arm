@@ -5,12 +5,15 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
 public class Main
@@ -37,6 +40,10 @@ public class Main
 	 */
 	private static RobotDisplay displayPanel;
 
+	private static boolean isMousePressed;
+
+	private static JButton currentButton;
+
 	private static class RobotDisplay extends JPanel
 	{
 		public void paintComponent( Graphics g )
@@ -56,6 +63,7 @@ public class Main
 		public void actionPerformed( ActionEvent e )
 		{
 			JButton button = (JButton) e.getSource();
+			currentButton = button;
 			if ( button.equals( incAx1 ) )
 			{
 				roboticArm.incrementLink1();
@@ -97,6 +105,21 @@ public class Main
 
 	public static void main( String[] args )
 	{
+
+		isMousePressed = false;
+
+		int delay = 100;
+		ActionListener taskPerformer = new ActionListener()
+		{
+			public void actionPerformed( ActionEvent evt )
+			{
+				if ( isMousePressed )
+				{
+					currentButton.doClick();
+				}
+			}
+		};
+		new Timer( delay, taskPerformer ).start();
 
 		roboticArm = new RoboticArm( 300, 600 );
 
@@ -202,13 +225,27 @@ public class Main
 		 * Additional items needed to setup the window
 		 */
 		JFrame window = new JFrame( "Team Ares - Project 1" );
+		window.addMouseListener( new MouseAdapter()
+		{
+			@Override
+			public void mousePressed( MouseEvent e )
+			{
+				isMousePressed = true;
+			}
+
+			@Override
+			public void mouseReleased( MouseEvent e )
+			{
+				isMousePressed = false;
+			}
+		} );
 		window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 		window.setContentPane( panes );
 		window.setSize( 830, 630 );
 		window.setLocation( 100, 100 );
 		window.setVisible( true );
 		window.setResizable( false );
-
+		currentButton = incAx1;
 	}
 
 }

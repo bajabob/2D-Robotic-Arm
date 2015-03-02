@@ -1,15 +1,20 @@
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.ArrayList;
 
 public class RoboticArm
 {
 	private RoboticLink link1, link2, link3;
+
+	private ArrayList<PaintBrush> brushes;
 
 	public RoboticArm( int globalX, int globalY )
 	{
 		link1 = new RoboticLink( globalX, globalY, 150, 270 );
 		link2 = new RoboticLink( globalX, globalY, 100, 0 );
 		link3 = new RoboticLink( globalX, globalY, 75, 0 );
+
+		brushes = new ArrayList<PaintBrush>();
 
 		this.onTranslate();
 	}
@@ -46,7 +51,7 @@ public class RoboticArm
 
 	public void paintCircle()
 	{
-		System.out.println( "Painting circle..." );
+		brushes.add( new PaintBrush( link3.getEndPointGlobal(), 5 ) );
 	}
 
 	public int getLink1Angle()
@@ -84,6 +89,10 @@ public class RoboticArm
 	 */
 	public void onDraw( Graphics g )
 	{
+		for ( PaintBrush p : this.brushes )
+		{
+			p.onDraw( g );
+		}
 		link1.onDraw( g );
 		link2.onDraw( g );
 		link3.onDraw( g );
