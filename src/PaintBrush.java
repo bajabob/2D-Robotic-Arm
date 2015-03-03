@@ -18,7 +18,8 @@ public class PaintBrush
 	public void onDraw( Graphics g )
 	{
 		g.setColor( Color.RED );
-		g.drawOval( center.x, center.y, radius * 2, radius * 2 );
+		//g.drawOval( center.x, center.y, radius * 2, radius * 2 );
+		g.fillOval( center.x, center.y, radius * 2, radius * 2 );
 	}
 
 }
