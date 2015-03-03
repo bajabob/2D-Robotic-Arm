@@ -97,6 +97,8 @@ public class Main
 			if ( button.equals( paintCircle ) )
 			{
 				roboticArm.paintCircle();
+				paintCircle.setText( roboticArm.isPainting() ? "Painting: On"
+						: "Painting: Off" );
 			}
 			roboticArm.onTranslate();
 			displayPanel.repaint();
@@ -108,7 +110,7 @@ public class Main
 
 		isMousePressed = false;
 
-		int delay = 100;
+		int delay = 50;
 		ActionListener taskPerformer = new ActionListener()
 		{
 			public void actionPerformed( ActionEvent evt )
@@ -146,7 +148,7 @@ public class Main
 		decAx3 = new JButton( "-" );
 		decAx3.addActionListener( onAxisButtonPress );
 
-		paintCircle = new JButton( "Paint Circle" );
+		paintCircle = new JButton( "Painting: Off" );
 		paintCircle.addActionListener( onAxisButtonPress );
 
 		/**

@@ -8,12 +8,15 @@ public class RoboticArm
 
 	private ArrayList<PaintBrush> brushes;
 
+	private boolean isPainting;
+
 	public RoboticArm( int globalX, int globalY )
 	{
 		link1 = new RoboticLink( globalX, globalY, 150, 270 );
 		link2 = new RoboticLink( globalX, globalY, 100, 0 );
 		link3 = new RoboticLink( globalX, globalY, 75, 0 );
 
+		isPainting = false;
 		brushes = new ArrayList<PaintBrush>();
 
 		this.onTranslate();
@@ -51,7 +54,12 @@ public class RoboticArm
 
 	public void paintCircle()
 	{
-		brushes.add( new PaintBrush( link3.getEndPointGlobal(), 5 ) );
+		isPainting = !isPainting;
+	}
+
+	public boolean isPainting()
+	{
+		return this.isPainting;
 	}
 
 	public int getLink1Angle()
@@ -81,6 +89,10 @@ public class RoboticArm
 		link3.setGlobalPosition( link2.getEndPointGlobal(), link1.getAngle()
 				+ link2.getAngle() );
 		link3.onTranslate();
+		if ( isPainting )
+		{
+			brushes.add( new PaintBrush( link3.getEndPointGlobal(), 5 ) );
+		}
 	}
 
 	/**
