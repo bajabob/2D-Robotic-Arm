@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class RoboticArm
 {
+	private int globalX, globalY;
+	
 	private RoboticLink link1, link2, link3;
 
 	private ArrayList<PaintBrush> brushes;
@@ -77,6 +79,12 @@ public class RoboticArm
 		return link3.getAngle();
 	}
 
+	public int[] getWorldCoordinates(){
+		int coords[] = {globalX, globalY};
+		return coords;
+	}
+	
+	
 	/**
 	 * Called after any values are changed for one of the robotic links
 	 */
@@ -89,11 +97,17 @@ public class RoboticArm
 		link3.setGlobalPosition( link2.getEndPointGlobal(), link1.getAngle()
 				+ link2.getAngle() );
 		link3.onTranslate();
+		
+		globalX = link3.getEndPointGlobal().x;
+		globalY = link3.getEndPointGlobal().y;
+		
 		if ( isPainting )
 		{
 			brushes.add( new PaintBrush( link3.getEndPointGlobal(), 5 ) );
 		}
 	}
+
+	
 
 	/**
 	 * Draws each of the robotic links

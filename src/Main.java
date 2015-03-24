@@ -24,11 +24,16 @@ public class Main
 	 */
 	private static JButton incAx1, decAx1, incAx2, decAx2, incAx3, decAx3,
 			paintCircle;
+	
+	/**
+	 * x/y +/- controls
+	 */
+	private static JButton yInc, yDec, xInc, xDec; 
 
 	/**
 	 * Displays the current angles of the robotic arm
 	 */
-	private static JLabel degAx1, degAx2, degAx3;
+	private static JLabel degAx1, degAx2, degAx3, worldCoordinateX, worldCoordinateY;
 
 	/**
 	 * manages each of the three robotic arm segments
@@ -56,7 +61,7 @@ public class Main
 	}
 
 	/**
-	 * Called whenever a button is pressed
+	 * Called whenever an axis button is pressed
 	 */
 	private static class OnAxisButtonPress implements ActionListener
 	{
@@ -102,8 +107,32 @@ public class Main
 			}
 			roboticArm.onTranslate();
 			displayPanel.repaint();
+			int[] coords = roboticArm.getWorldCoordinates();
+			worldCoordinateX.setText(coords[0]+"");
+			worldCoordinateY.setText(coords[1]+"");
 		}
 	}
+	
+	
+	/**
+	 * Called whenever an axis button is pressed
+	 */
+	private static class OnWorldControlButtonPress implements ActionListener
+	{
+		public void actionPerformed( ActionEvent e )
+		{
+			JButton button = (JButton) e.getSource();
+			currentButton = button;
+			if ( button.equals( incAx1 ) )
+			{
+				
+			}
+			
+			//roboticArm.onTranslate();
+			//displayPanel.repaint();
+		}
+	}
+	
 
 	public static void main( String[] args )
 	{
@@ -129,7 +158,8 @@ public class Main
 		displayPanel.setBounds( 0, 0, 600, 600 );
 
 		OnAxisButtonPress onAxisButtonPress = new OnAxisButtonPress();
-
+		OnWorldControlButtonPress onWorldControlButtonPress = new OnWorldControlButtonPress();
+		
 		/**
 		 * Create axis editing buttons
 		 */
@@ -152,11 +182,26 @@ public class Main
 		paintCircle.addActionListener( onAxisButtonPress );
 
 		/**
+		 * Create x/y +/- editing buttons
+		 */
+		yInc = new JButton( "+Y" );
+		yInc.addActionListener( onWorldControlButtonPress );
+		yDec = new JButton( "-Y" );
+		yDec.addActionListener( onWorldControlButtonPress );
+		xInc = new JButton( "+X" );
+		xInc.addActionListener( onWorldControlButtonPress );
+		xDec = new JButton( "-X" );
+		xDec.addActionListener( onWorldControlButtonPress );
+		
+		
+		/**
 		 * Create axis degree labels
 		 */
 		degAx1 = new JLabel( "" );
 		degAx2 = new JLabel( "" );
 		degAx3 = new JLabel( "" );
+		worldCoordinateX = new JLabel("");
+		worldCoordinateY = new JLabel("");
 
 		/**
 		 * Create control panel, add buttons
@@ -195,7 +240,7 @@ public class Main
 
 		c.gridx = 0;
 		c.gridy = 3;
-		controlPanel.add( new JLabel( "Axis 2", SwingConstants.CENTER ), c );
+		controlPanel.add( new JLabel( "Axis 3", SwingConstants.CENTER ), c );
 		c.gridx = 1;
 		c.gridy = 3;
 		controlPanel.add( incAx3, c );
@@ -206,14 +251,47 @@ public class Main
 		c.gridy = 3;
 		controlPanel.add( decAx3, c );
 
+		c.gridx = 0;
+		c.gridy = 7;
+		controlPanel.add( new JLabel( "X Axis", SwingConstants.CENTER ), c );
+		c.gridx = 1;
+		c.gridy = 7;
+		controlPanel.add( xInc, c );
+		c.gridx = 2;
+		c.gridy = 7;
+		controlPanel.add( worldCoordinateX, c );
+		c.gridx = 3;
+		c.gridy = 7;
+		controlPanel.add( xDec, c );
+		
+		c.gridx = 0;
+		c.gridy = 8;
+		controlPanel.add( new JLabel( "Y Axis", SwingConstants.CENTER ), c );
+		c.gridx = 1;
+		c.gridy = 8;
+		controlPanel.add( yInc, c );
+		c.gridx = 2;
+		c.gridy = 8;
+		controlPanel.add( worldCoordinateY, c );
+		c.gridx = 3;
+		c.gridy = 8;
+		controlPanel.add( yDec, c );
+		
 		c.gridwidth = 4;
 		c.gridx = 0;
 		c.gridy = 0;
-		controlPanel.add( new JLabel( "Control Panel", SwingConstants.CENTER ),
+		controlPanel.add( new JLabel( "Local Control", SwingConstants.CENTER ),
 				c );
 		c.gridy = 4;
 		controlPanel.add( paintCircle, c );
 
+		c.gridwidth = 4;
+		c.gridx = 0;
+		c.gridy = 5;
+		controlPanel.add( new JLabel( "World Control", SwingConstants.CENTER ),
+				c );
+		
+		
 		/**
 		 * Create the overall panel, and incorporate
 		 *   all the sub-panels for this project
@@ -226,7 +304,7 @@ public class Main
 		/**
 		 * Additional items needed to setup the window
 		 */
-		JFrame window = new JFrame( "Team Ares - Project 1" );
+		JFrame window = new JFrame( "Team Ares - Project 2" );
 		window.addMouseListener( new MouseAdapter()
 		{
 			@Override
