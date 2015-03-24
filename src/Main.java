@@ -123,13 +123,27 @@ public class Main
 		{
 			JButton button = (JButton) e.getSource();
 			currentButton = button;
-			if ( button.equals( incAx1 ) )
+			if ( button.equals( xInc ) )
 			{
-				
+				roboticArm.incrementGlobalX();
 			}
-			
-			//roboticArm.onTranslate();
-			//displayPanel.repaint();
+			if ( button.equals( xDec ) )
+			{
+				roboticArm.decrementGlobalX();
+			}
+			if ( button.equals( yInc ) )
+			{
+				roboticArm.incrementGlobalY();
+			}
+			if ( button.equals( yDec ) )
+			{
+				roboticArm.decrementGlobalY();
+			}
+			roboticArm.onWorldTranslate();
+			int[] coords = roboticArm.getWorldCoordinates();
+			worldCoordinateX.setText(coords[0]+"");
+			worldCoordinateY.setText(coords[1]+"");
+			displayPanel.repaint();
 		}
 	}
 	

@@ -19,6 +19,9 @@ public class RoboticLink
 
 	int length;
 
+	/**
+	 * Angle in degrees
+	 */
 	int localAngle, globalAngle;
 
 	private Polygon link;
@@ -44,7 +47,20 @@ public class RoboticLink
 
 		this.onTranslate();
 	}
+	
+	/**
+	 * get the length of this link
+	 * @return int
+	 */
+	public int getLength(){
+		return this.length;
+	}
+	
 
+	public void setLocalAngle(int angle){
+		this.localAngle = angle;
+	}
+	
 	/**
 	 * Increase the angle of this link by one
 	 */
@@ -79,9 +95,22 @@ public class RoboticLink
 		this.globalAngle = angle + this.localAngle;
 	}
 
+	/**
+	 * Get the angle of this link in degrees
+	 * @return int
+	 */
 	public int getAngle()
 	{
 		return this.localAngle;
+	}
+	
+	/**
+	 * Get the angle of this link in degrees
+	 * @return double
+	 */
+	public double getAngleRadians()
+	{
+		return Math.toRadians(this.localAngle);
 	}
 
 	/**
