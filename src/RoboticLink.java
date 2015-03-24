@@ -67,10 +67,6 @@ public class RoboticLink
 	public void incrementAngle()
 	{
 		++localAngle;
-		if ( localAngle > 360 )
-		{
-			localAngle = 0;
-		}
 	}
 
 	/**
@@ -79,10 +75,6 @@ public class RoboticLink
 	public void decrementAngle()
 	{
 		--localAngle;
-		if ( localAngle < 0 )
-		{
-			localAngle = 360;
-		}
 	}
 
 	/**

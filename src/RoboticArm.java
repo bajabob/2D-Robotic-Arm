@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -103,7 +104,7 @@ public class RoboticArm {
 		globalY = link3.getEndPointGlobal().y;
 
 		if (isPainting) {
-			brushes.add(new PaintBrush(link3.getEndPointGlobal(), 5));
+			brushes.add(new PaintBrush(link3.getEndPointGlobal(), 5, Color.RED));
 		}
 	}
 
@@ -155,7 +156,7 @@ public class RoboticArm {
 						
 						if(pX == globalX && pY == globalY){
 							if (isPainting) {
-								brushes.add(new PaintBrush(link3.getEndPointGlobal(), 5));
+								brushes.add(new PaintBrush(link3.getEndPointGlobal(), 5, Color.GREEN));
 							}
 							return;
 						}

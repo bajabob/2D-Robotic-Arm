@@ -72,32 +72,26 @@ public class Main
 			if ( button.equals( incAx1 ) )
 			{
 				roboticArm.incrementLink1();
-				degAx1.setText( "" + roboticArm.getLink1Angle() );
 			}
 			if ( button.equals( incAx2 ) )
 			{
 				roboticArm.incrementLink2();
-				degAx2.setText( "" + roboticArm.getLink2Angle() );
 			}
 			if ( button.equals( incAx3 ) )
 			{
 				roboticArm.incrementLink3();
-				degAx3.setText( "" + roboticArm.getLink3Angle() );
 			}
 			if ( button.equals( decAx1 ) )
 			{
 				roboticArm.decrementLink1();
-				degAx1.setText( "" + roboticArm.getLink1Angle() );
 			}
 			if ( button.equals( decAx2 ) )
 			{
 				roboticArm.decrementLink2();
-				degAx2.setText( "" + roboticArm.getLink2Angle() );
 			}
 			if ( button.equals( decAx3 ) )
 			{
 				roboticArm.decrementLink3();
-				degAx3.setText( "" + roboticArm.getLink3Angle() );
 			}
 			if ( button.equals( paintCircle ) )
 			{
@@ -106,10 +100,8 @@ public class Main
 						: "Painting: Off" );
 			}
 			roboticArm.onTranslate();
+			updateLabels();
 			displayPanel.repaint();
-			int[] coords = roboticArm.getWorldCoordinates();
-			worldCoordinateX.setText(coords[0]+"");
-			worldCoordinateY.setText(coords[1]+"");
 		}
 	}
 	
@@ -140,14 +132,22 @@ public class Main
 				roboticArm.decrementGlobalY();
 			}
 			roboticArm.onWorldTranslate();
-			int[] coords = roboticArm.getWorldCoordinates();
-			worldCoordinateX.setText(coords[0]+"");
-			worldCoordinateY.setText(coords[1]+"");
+			updateLabels();
 			displayPanel.repaint();
 		}
 	}
 	
-
+	
+	private static void updateLabels(){
+		int[] coords = roboticArm.getWorldCoordinates();
+		worldCoordinateX.setText(coords[0]+"");
+		worldCoordinateY.setText(coords[1]+"");
+		
+		degAx1.setText( "" + roboticArm.getLink1Angle() );
+		degAx2.setText( "" + roboticArm.getLink2Angle() );
+		degAx3.setText( "" + roboticArm.getLink3Angle() );
+	}
+	
 	public static void main( String[] args )
 	{
 
