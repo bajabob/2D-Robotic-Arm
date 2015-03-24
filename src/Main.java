@@ -153,7 +153,7 @@ public class Main
 
 		isMousePressed = false;
 
-		int delay = 50;
+		int delay = 500;
 		ActionListener taskPerformer = new ActionListener()
 		{
 			public void actionPerformed( ActionEvent evt )
@@ -270,26 +270,26 @@ public class Main
 		controlPanel.add( new JLabel( "X Axis", SwingConstants.CENTER ), c );
 		c.gridx = 1;
 		c.gridy = 7;
-		controlPanel.add( xInc, c );
+		controlPanel.add( xDec, c );
 		c.gridx = 2;
 		c.gridy = 7;
 		controlPanel.add( worldCoordinateX, c );
 		c.gridx = 3;
 		c.gridy = 7;
-		controlPanel.add( xDec, c );
+		controlPanel.add( xInc, c );
 		
 		c.gridx = 0;
 		c.gridy = 8;
 		controlPanel.add( new JLabel( "Y Axis", SwingConstants.CENTER ), c );
 		c.gridx = 1;
 		c.gridy = 8;
-		controlPanel.add( yInc, c );
+		controlPanel.add( yDec, c );
 		c.gridx = 2;
 		c.gridy = 8;
 		controlPanel.add( worldCoordinateY, c );
 		c.gridx = 3;
 		c.gridy = 8;
-		controlPanel.add( yDec, c );
+		controlPanel.add( yInc, c );
 		
 		c.gridwidth = 4;
 		c.gridx = 0;

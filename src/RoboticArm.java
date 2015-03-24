@@ -129,11 +129,11 @@ public class RoboticArm {
 			int orig2 = link2.getAngle();
 			int orig3 = link3.getAngle();
 			
-			int maxAngle1 = link1.getAngle()+2;
+			int maxAngle1 = link1.getAngle()+3;
 			int maxAngle2 = link2.getAngle()+120;
 			int maxAngle3 = link3.getAngle()+120;
 			
-			for (int i = link1.getAngle()-2; i < maxAngle1; ++i) {
+			for (int i = link1.getAngle()-3; i < maxAngle1; ++i) {
 				for (int j = link2.getAngle()-120; j < maxAngle2; ++j) {
 					for (int k = link3.getAngle()-160; k < maxAngle3; ++k) {
 						
