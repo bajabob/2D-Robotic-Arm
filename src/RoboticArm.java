@@ -87,6 +87,17 @@ public class RoboticArm {
 	public void decrementGlobalY() {
 		--globalY;
 	}
+	
+	public void checkServer(){
+		
+		// check server with: http://ec2-54-68-238-238.us-west-2.compute.amazonaws.com/show.php
+		//http://ec2-54-68-238-238.us-west-2.compute.amazonaws.com/get.php
+	}
+	
+	public void postToServer(){
+		//http://ec2-54-68-238-238.us-west-2.compute.amazonaws.com/add.php?x=103&y=203&d1=10&d2=20&d3=30
+	}
+	
 
 	/**
 	 * Called after any values are changed for one of the robotic links
