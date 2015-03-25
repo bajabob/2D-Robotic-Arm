@@ -153,7 +153,7 @@ public class Main
 
 		isMousePressed = false;
 
-		int delay = 500;
+		int delay = 50;
 		ActionListener taskPerformer = new ActionListener()
 		{
 			public void actionPerformed( ActionEvent evt )

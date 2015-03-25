@@ -125,48 +125,87 @@ public class RoboticArm {
 
 		if (proposedLength < maxLength) {
 			System.out.println("robot arm will reach here");
-			
-			int orig1 = link1.getAngle();
-			int orig2 = link2.getAngle();
-			int orig3 = link3.getAngle();
-			
-			int maxAngle1 = link1.getAngle()+3;
-			int maxAngle2 = link2.getAngle()+120;
-			int maxAngle3 = link3.getAngle()+120;
-			
-			for (int i = link1.getAngle()-3; i < maxAngle1; ++i) {
-				for (int j = link2.getAngle()-120; j < maxAngle2; ++j) {
-					for (int k = link3.getAngle()-160; k < maxAngle3; ++k) {
-						
-						link1.setLocalAngle(i);
-						link1.setGlobalPosition(new Point(300, 600), 0);
-						link1.onTranslate();
-						
-						link2.setLocalAngle(j);
-						link2.setGlobalPosition(link1.getEndPointGlobal(), link1.getAngle());
-						link2.onTranslate();
-						
-						link3.setLocalAngle(k);
-						link3.setGlobalPosition(link2.getEndPointGlobal(), link1.getAngle()
-								+ link2.getAngle());
-						link3.onTranslate();
 
-						int pX = link3.getEndPointGlobal().x;
-						int pY = link3.getEndPointGlobal().y;
-						
-						if(pX == globalX && pY == globalY){
-							if (isPainting) {
-								brushes.add(new PaintBrush(link3.getEndPointGlobal(), 5, Color.GREEN));
-							}
-							return;
-						}
-					}
-				}
+			// compensate for world coordinate system
+			int glbX = globalX - 300, glbY = -(600 - globalY);
+
+			// get lengths of each link
+			double link1Len = link1.getLength();
+			double link2Len = link2.getLength();
+			double link3Len = link3.getLength();
+
+			// total distance to point
+			double totalDistance = Math.sqrt(Math.pow(glbX, 2) + Math.pow(glbY, 2));
+
+			double deltaDist = 0, deltaLinks = 0;
+
+			int delta = 0;
+
+			/**
+			 * Length to world point
+			 */
+			if (Math.abs(totalDistance - link1Len) < link2Len - link3Len) {
+				deltaDist = 2 * Math.pow(link1Len, 2)
+						- Math.pow(link2Len - link3Len, 2);
+				deltaLinks = 2 * link1Len * link1Len;
+				delta = (int) Math.ceil(Math.toDegrees(Math.acos(deltaDist
+						/ deltaLinks)));
+			}
+
+			double l = Math.sqrt(Math.pow(totalDistance, 2) + Math.pow(link1Len, 2) - 2 * totalDistance
+					* link1Len * Math.cos(Math.toRadians(delta)));
+
+			/**
+			 * calculate each angle
+			 */
+			deltaDist = Math.pow(link1Len, 2) + Math.pow(l, 2) - Math.pow(totalDistance, 2);
+			deltaLinks = 2 * link1Len * l;
+			double omega = Math.toDegrees(Math.acos(deltaDist / deltaLinks));
+			if (Double.isNaN(omega)) {
+				omega = Math.toDegrees(Math.acos(Math.round(deltaDist
+						/ deltaLinks)));
 			}
 			
-			link1.setLocalAngle(orig1);
-			link2.setLocalAngle(orig2);
-			link3.setLocalAngle(orig3);
+			deltaDist = Math.pow(link2Len, 2) + Math.pow(l, 2)
+					- Math.pow(link3Len, 2);
+			deltaLinks = 2 * link2Len * l;
+			double alpha = Math.toDegrees(Math.acos(deltaDist / deltaLinks));
+			if (Double.isNaN(alpha)) {
+				alpha = Math.toDegrees(Math.acos(Math.round(deltaDist
+						/ deltaLinks)));
+			}
+			
+			deltaDist = Math.pow(link2Len, 2) + Math.pow(link3Len, 2)
+					- Math.pow(l, 2);
+			deltaLinks = 2 * link2Len * link3Len;
+			double beta = Math.toDegrees(Math.acos(deltaDist / deltaLinks));
+			if (Double.isNaN(beta)) {
+				beta = Math.toDegrees(Math.acos(Math.round(deltaDist
+						/ deltaLinks)));
+			}
+			
+			double thetaLink1Len = Math.toDegrees(Math.atan2(glbY, glbX))
+					- delta;
+
+			double thetaLink2Len = ((180 - alpha) - omega);
+			double thetaLink3Len = 180 - beta;
+
+			link1.setLocalAngle((int) Math.floor(thetaLink1Len));
+			link2.setLocalAngle((int) Math.floor(thetaLink2Len));
+			link3.setLocalAngle((int) Math.floor(thetaLink3Len));
+
+			link1.setGlobalPosition(new Point(300, 600), 0);
+			link1.onTranslate();
+			link2.setGlobalPosition(link1.getEndPointGlobal(), link1.getAngle());
+			link2.onTranslate();
+			link3.setGlobalPosition(link2.getEndPointGlobal(), link1.getAngle()
+					+ link2.getAngle());
+			link3.onTranslate();
+
+			if (isPainting) {
+				brushes.add(new PaintBrush(link3.getEndPointGlobal(), 5,
+						Color.GREEN));
+			}
 
 		} else {
 			System.out.println("robot arm will not reach here");
