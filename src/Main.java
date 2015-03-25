@@ -340,6 +340,8 @@ public class Main
 		window.setVisible( true );
 		window.setResizable( false );
 		currentButton = incAx1;
+		
+		roboticArm.checkServer();
 	}
 
 }

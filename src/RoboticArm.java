@@ -1,7 +1,9 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.io.IOException;
 import java.util.ArrayList;
+
 
 public class RoboticArm {
 	private int globalX, globalY;
@@ -89,7 +91,16 @@ public class RoboticArm {
 	}
 	
 	public void checkServer(){
-		
+		JSONObject json;
+		try {
+			json = JSONReader.readJsonFromUrl("http://ec2-54-68-238-238.us-west-2.compute.amazonaws.com/get.php");
+			System.out.println(json.toString());
+		    System.out.println(json.get("id"));
+		} catch (IOException | JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
 		// check server with: http://ec2-54-68-238-238.us-west-2.compute.amazonaws.com/show.php
 		//http://ec2-54-68-238-238.us-west-2.compute.amazonaws.com/get.php
 	}
