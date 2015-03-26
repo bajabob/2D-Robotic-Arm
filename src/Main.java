@@ -19,21 +19,41 @@ import javax.swing.border.EmptyBorder;
 public class Main
 {
 
+	private static final String MODE_NONE = "None";
+	private static final String MODE_CONTROLLER = "Controller";
+	private static final String MODE_RECEIVER = "Receiver";
+
 	/**
 	 * All the buttons to interact with the robotic arm
 	 */
 	private static JButton incAx1, decAx1, incAx2, decAx2, incAx3, decAx3,
 			paintCircle;
-	
+
 	/**
 	 * x/y +/- controls
 	 */
-	private static JButton yInc, yDec, xInc, xDec; 
+	private static JButton yInc, yDec, xInc, xDec;
+
+	/**
+	 * the command control button
+	 */
+	private static JButton commandMode;
+
+	/**
+	 * Current mode the robotic arm is running in
+	 */
+	private static String currentCommandMode = MODE_NONE;
+
+	/**
+	 * manages server/client calls
+	 */
+	private Timer commandTimer;
 
 	/**
 	 * Displays the current angles of the robotic arm
 	 */
-	private static JLabel degAx1, degAx2, degAx3, worldCoordinateX, worldCoordinateY;
+	private static JLabel degAx1, degAx2, degAx3, worldCoordinateX,
+			worldCoordinateY;
 
 	/**
 	 * manages each of the three robotic arm segments
@@ -104,8 +124,7 @@ public class Main
 			displayPanel.repaint();
 		}
 	}
-	
-	
+
 	/**
 	 * Called whenever an axis button is pressed
 	 */
@@ -136,18 +155,18 @@ public class Main
 			displayPanel.repaint();
 		}
 	}
-	
-	
-	private static void updateLabels(){
+
+	private static void updateLabels()
+	{
 		int[] coords = roboticArm.getWorldCoordinates();
-		worldCoordinateX.setText(coords[0]+"");
-		worldCoordinateY.setText(coords[1]+"");
-		
+		worldCoordinateX.setText( coords[0] + "" );
+		worldCoordinateY.setText( coords[1] + "" );
+
 		degAx1.setText( "" + roboticArm.getLink1Angle() );
 		degAx2.setText( "" + roboticArm.getLink2Angle() );
 		degAx3.setText( "" + roboticArm.getLink3Angle() );
 	}
-	
+
 	public static void main( String[] args )
 	{
 
@@ -173,7 +192,7 @@ public class Main
 
 		OnAxisButtonPress onAxisButtonPress = new OnAxisButtonPress();
 		OnWorldControlButtonPress onWorldControlButtonPress = new OnWorldControlButtonPress();
-		
+
 		/**
 		 * Create axis editing buttons
 		 */
@@ -206,16 +225,15 @@ public class Main
 		xInc.addActionListener( onWorldControlButtonPress );
 		xDec = new JButton( "-X" );
 		xDec.addActionListener( onWorldControlButtonPress );
-		
-		
+
 		/**
 		 * Create axis degree labels
 		 */
 		degAx1 = new JLabel( "" );
 		degAx2 = new JLabel( "" );
 		degAx3 = new JLabel( "" );
-		worldCoordinateX = new JLabel("");
-		worldCoordinateY = new JLabel("");
+		worldCoordinateX = new JLabel( "" );
+		worldCoordinateY = new JLabel( "" );
 
 		/**
 		 * Create control panel, add buttons
@@ -277,7 +295,7 @@ public class Main
 		c.gridx = 3;
 		c.gridy = 7;
 		controlPanel.add( xInc, c );
-		
+
 		c.gridx = 0;
 		c.gridy = 8;
 		controlPanel.add( new JLabel( "Y Axis", SwingConstants.CENTER ), c );
@@ -290,7 +308,7 @@ public class Main
 		c.gridx = 3;
 		c.gridy = 8;
 		controlPanel.add( yInc, c );
-		
+
 		c.gridwidth = 4;
 		c.gridx = 0;
 		c.gridy = 0;
@@ -304,8 +322,39 @@ public class Main
 		c.gridy = 5;
 		controlPanel.add( new JLabel( "World Control", SwingConstants.CENTER ),
 				c );
-		
-		
+
+		c.gridwidth = 4;
+		c.gridx = 0;
+		c.gridy = 9;
+		controlPanel.add(
+				new JLabel( "Controller Mode", SwingConstants.CENTER ), c );
+
+		commandMode = new JButton( currentCommandMode );
+		commandMode.addActionListener( new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed( ActionEvent e )
+			{
+				if ( currentCommandMode == MODE_RECEIVER )
+				{
+					currentCommandMode = MODE_NONE;
+				} else if ( currentCommandMode == MODE_CONTROLLER )
+				{
+					currentCommandMode = MODE_RECEIVER;
+				} else if ( currentCommandMode == MODE_NONE )
+				{
+					currentCommandMode = MODE_CONTROLLER;
+				}
+				commandMode.setText( currentCommandMode );
+			}
+		} );
+
+		c.gridwidth = 4;
+		c.gridx = 0;
+		c.gridy = 10;
+		controlPanel.add( commandMode, c );
+
 		/**
 		 * Create the overall panel, and incorporate
 		 *   all the sub-panels for this project
@@ -340,8 +389,25 @@ public class Main
 		window.setVisible( true );
 		window.setResizable( false );
 		currentButton = incAx1;
-		
-		roboticArm.checkServer();
+
+		ActionListener serverTask = new ActionListener()
+		{
+			public void actionPerformed( ActionEvent evt )
+			{
+				if ( currentCommandMode == MODE_CONTROLLER )
+				{
+					roboticArm.postToServer();
+				}
+				if ( currentCommandMode == MODE_RECEIVER )
+				{
+					roboticArm.checkServer();
+					roboticArm.onTranslate();
+					displayPanel.repaint();
+				}
+			}
+		};
+		new Timer( 1000, serverTask ).start();
+
 	}
 
 }
