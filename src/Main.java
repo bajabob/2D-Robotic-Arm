@@ -21,7 +21,8 @@ public class Main
 
 	private static final String MODE_NONE = "None";
 	private static final String MODE_CONTROLLER = "Controller";
-	private static final String MODE_RECEIVER = "Receiver";
+	private static final String MODE_RECEIVER = "Real Time Receiver";
+	private static final String MODE_RECEIVERDELAYED = "Delayed Receiver";
 
 	/**
 	 * All the buttons to interact with the robotic arm
@@ -48,6 +49,10 @@ public class Main
 	 * manages server/client calls
 	 */
 	private Timer commandTimer;
+
+
+	private static Timer serverTimer;
+
 
 	/**
 	 * Displays the current angles of the robotic arm
@@ -345,6 +350,27 @@ public class Main
 		controlPanel.add(
 				new JLabel( "Controller Mode", SwingConstants.CENTER ), c );
 
+		ActionListener serverTask = new ActionListener()
+		{
+			public void actionPerformed( ActionEvent evt )
+			{
+				if ( currentCommandMode == MODE_CONTROLLER )
+				{
+					roboticArm.postToServer();
+				}
+				if ( currentCommandMode == MODE_RECEIVER || currentCommandMode == MODE_RECEIVERDELAYED)
+				{
+					roboticArm.checkServer();
+					roboticArm.onTranslate();
+					displayPanel.repaint();
+				}
+			}
+		};
+		
+		serverTimer = new Timer( 100, serverTask );
+		serverTimer.start();
+
+
 		commandMode = new JButton( currentCommandMode );
 		commandMode.addActionListener( new ActionListener()
 		{
@@ -354,13 +380,19 @@ public class Main
 			{
 				if ( currentCommandMode == MODE_RECEIVER )
 				{
-					currentCommandMode = MODE_NONE;
+					currentCommandMode = MODE_RECEIVERDELAYED;
+					serverTimer.setDelay(2000);
 				} else if ( currentCommandMode == MODE_CONTROLLER )
 				{
 					currentCommandMode = MODE_RECEIVER;
+					serverTimer.setDelay(100);
 				} else if ( currentCommandMode == MODE_NONE )
 				{
 					currentCommandMode = MODE_CONTROLLER;
+					serverTimer.setDelay(100);
+				} else if(currentCommandMode == MODE_RECEIVERDELAYED){
+					currentCommandMode = MODE_NONE;
+					serverTimer.setDelay(10000);
 				}
 				setButtonState( currentCommandMode != MODE_RECEIVER );
 				commandMode.setText( currentCommandMode );
@@ -407,23 +439,6 @@ public class Main
 		window.setResizable( false );
 		currentButton = incAx1;
 
-		ActionListener serverTask = new ActionListener()
-		{
-			public void actionPerformed( ActionEvent evt )
-			{
-				if ( currentCommandMode == MODE_CONTROLLER )
-				{
-					roboticArm.postToServer();
-				}
-				if ( currentCommandMode == MODE_RECEIVER )
-				{
-					roboticArm.checkServer();
-					roboticArm.onTranslate();
-					displayPanel.repaint();
-				}
-			}
-		};
-		new Timer( 100, serverTask ).start();
 
 	}
 
