@@ -118,6 +118,7 @@ public class RoboticArm
 			link1.setLocalAngle( json.getInt( "d1" ) );
 			link2.setLocalAngle( json.getInt( "d2" ) );
 			link3.setLocalAngle( json.getInt( "d3" ) );
+			isPainting = (json.getInt("isPainting") == 0) ? false : true;
 		} catch ( IOException | JSONException e )
 		{
 			// TODO Auto-generated catch block
@@ -135,11 +136,12 @@ public class RoboticArm
 		try
 		{
 			json = JSONReader
-					.readJsonFromUrl( "http://ec2-54-68-238-238.us-west-2.compute.amazonaws.com/add.php?x=1&y=1&d1="
+					.readJsonFromUrl( "http://ec2-54-68-238-238.us-west-2.compute.amazonaws.com/add.php?d1="
 							+ link1.getAngle()
 							+ "&d2="
 							+ link2.getAngle()
-							+ "&d3=" + link3.getAngle() );
+							+ "&d3=" + link3.getAngle()
+							+ "&isPainting=" + (isPainting ? 1 : 0) );
 		} catch ( IOException | JSONException e )
 		{
 			// TODO Auto-generated catch block
@@ -277,7 +279,7 @@ public class RoboticArm
 			if ( isPainting )
 			{
 				brushes.add( new PaintBrush( link3.getEndPointGlobal(), 5,
-						Color.GREEN ) );
+						Color.RED ) );
 			}
 
 		} else

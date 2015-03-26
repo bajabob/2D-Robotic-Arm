@@ -156,6 +156,22 @@ public class Main
 		}
 	}
 
+
+	private static void setButtonState(boolean state){
+
+		incAx1.setEnabled( state );
+		decAx1.setEnabled( state );
+		incAx2.setEnabled( state );
+		decAx2.setEnabled( state );
+		incAx3.setEnabled( state );
+		decAx3.setEnabled( state );
+		paintCircle.setEnabled( state );
+		yInc.setEnabled( state );
+		yDec.setEnabled( state );
+		xInc.setEnabled( state );
+		xDec.setEnabled( state );
+	}
+
 	private static void updateLabels()
 	{
 		int[] coords = roboticArm.getWorldCoordinates();
@@ -346,6 +362,7 @@ public class Main
 				{
 					currentCommandMode = MODE_CONTROLLER;
 				}
+				setButtonState( currentCommandMode != MODE_RECEIVER );
 				commandMode.setText( currentCommandMode );
 			}
 		} );
@@ -406,7 +423,7 @@ public class Main
 				}
 			}
 		};
-		new Timer( 1000, serverTask ).start();
+		new Timer( 100, serverTask ).start();
 
 	}
 
