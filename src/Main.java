@@ -416,7 +416,7 @@ public class Main
 		/**
 		 * Additional items needed to setup the window
 		 */
-		JFrame window = new JFrame( "Team Ares - Project 2" );
+		JFrame window = new JFrame( "Team Ares - Project 3" );
 		window.addMouseListener( new MouseAdapter()
 		{
 			@Override
