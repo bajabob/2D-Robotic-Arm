@@ -1,8 +1,5 @@
-CSCE-452-Project-3
-==================
-
 ### About
-Our team decided to create a web based API for handling robot control transactions. We setup a free Amazon Web Service which consists of a remote linux box that accepts HTTP connections. We installed PHP to handle local logic, MySQL to keep track of robot link coordinates and of course Git to allow us to deploy our software solution to the remote server. Our API responds with a simple JSON based string that contains the most-recent robot transaction. This method allows us to control one or many robots simultaneously. We can even have more than one robot issuing remote commands using this method as well.
+I decided to create a web based API for handling robot control transactions. I setup a free Amazon Web Service which consists of a remote linux box that accepts HTTP connections. I installed PHP to handle local logic, MySQL to keep track of robot link coordinates and of course Git to allow us to deploy our software solution to the remote server. The API responds with a simple JSON based string that contains the most-recent robot transaction. This method allows the application to control one or many robots simultaneously. The application can even have more than one robot issuing remote commands using this method as well.
 
 ### AWS EC2 Linux Server Setup
 
